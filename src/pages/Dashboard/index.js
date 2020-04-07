@@ -1,35 +1,61 @@
 import React, { useEffect, useState } from 'react';
 import { Form } from '@unform/web';
+
+import { toast } from 'react-toastify';
+
 import Select from '../../components/Select';
 
-import { api, stateApi, local } from '../../services/api';
+import { api, local } from '../../services/api';
 
-import { Container, Line } from './styles';
+import { Container, Line, Options, CleanButton, AdvancedSearch, Content } from './styles';
+
+import Checkbox from '../../components/Checkbox';
+import Header from './Header';
+
+import { IoIosArrowForward } from 'react-icons/io';
+import { FiMapPin } from 'react-icons/fi';
+import { TiDelete } from 'react-icons/ti';
 
 export default function Dashboard() {
-  const [ makes, setMakes] = useState([]);
-  const [ models, setModels] = useState([]);
-  const [ versions, setVersions] = useState([]);
-  const [ vehicles, setVehicles] = useState([]);
-  const [ states, setStates] = useState([]);
-  const [ radius, setRadius] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [brand, setBrand] = useState('');
 
-  async function handleChangeMake(id) {
-    await loadModels(id)
-  }
+  const [models, setModels] = useState([]);
+  const [model, setModel] = useState('');
 
-  async function handleChangeModel(id) {
-    await loadVersions(id)
-  }
+  const [versions, setVersions] = useState([]);
+  const [version, setVersion] = useState([]);
+  
+  const [vehicles, setVehicles] = useState([]);
+
+  const [priceRanges, setPriceRanges] = useState([]);
+  const [priceRange, setPriceRange] = useState('');
+
+  const [states, setStates] = useState([]);
+  const [state, setState] = useState('');
+
+  const [radius, setRadius] = useState([]);
+  const [radiusValue, setRadiusValue] = useState('');
+
+  const [years, setYears] = useState([]);
+  const [year, setYear] = useState('');
+  
+  const [isNew, setIsNew] = useState(false);
+  const [old, setOld] = useState(false);
   
   function handleSubmit(data) {
     console.log(data);
   }
 
-  async function loadMakes() {
+  async function loadBrands() {
     const response = await api.get('Make');
 
-    setMakes(response.data);
+    setBrands(response.data);
+  }
+  
+  async function handleSetBrand(id) {
+    setBrand(id);
+    await loadModels(id);
   }
 
   async function loadModels(makeId) {
@@ -43,15 +69,20 @@ export default function Dashboard() {
   }
 
   async function loadStatesAndRadius() {
-    const response = await stateApi.get('');
+    const states = await local.get('states');
     const radius = await local.get('radius');
-
-    setStates(response.data.geonames.map(state => ({
-      ID: state.toponymName,
-      Name: state.toponymName
-    })));
+    const years = await local.get('years');
+    const ranges = await local.get('ranges');
 
     setRadius(radius.data);
+    setStates(states.data);
+    setYears(years.data);
+    setPriceRanges(ranges.data);
+  }
+
+  async function handleSetModel(id) {
+    setModel(id);
+    loadVersions(id);
   }
 
   async function loadVersions(modelId) {
@@ -74,24 +105,137 @@ export default function Dashboard() {
     setVehicles(response.data);
   }
 
+  function handleResetStateSelect() {
+    setState('');
+  }
+
+  function handleCleanForm() {
+    setState('');
+    setRadiusValue('');
+    setBrand('');
+    setModel('');
+    setYear('');
+    setPriceRange('');
+    setVersion('');
+
+    toast.success('Formulário limpo!');
+  }
+
   useEffect(() => {
-    loadMakes();
+    loadBrands();
     loadVehicles();
     loadStatesAndRadius();
   }, [])
 
   return (
     <Container>
-       <Form onSubmit={handleSubmit}>
-        <Line>
-          <Select placeholderTitle="Onde" options={states} name="states" />
-          <Select placeholderTitle="Raio" options={radius} name="radius" />
-          <Select style={{marginLeft: 20 }} placeholderTitle="Marca" handleChange={ handleChangeMake } options={makes} name="makes" />
-          <Select style={{marginLeft: 20 }} placeholderTitle="Modelo" placeholder="Todos" handleChange={ handleChangeModel } options={models} name="models" />
-        </Line>
-        <button type="submit">VER OFERTAS</button>
-      </Form>
+      <Header />
+      <Content>
+      
+        <Form onSubmit={handleSubmit}>
+          <Options>
+            <Checkbox 
+              onChange={ () => setIsNew(!isNew) } 
+              label={'Novos'} 
+            />
+            <Checkbox 
+              onChange={ () => setOld(!old) } 
+              style={{ marginLeft: 20 }} 
+              label={'Usados'} 
+            />
+          </Options>
+          
+          <Line>
+            <span style={{ width: '38%', borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRight: 0 }}>
+              <FiMapPin size={25} color="red" />
+              <label style={{ marginLeft: 10 }}>Onde:</label>
+              <Select 
+                handleChange={ setState } 
+                value={ state } 
+                options={ states } 
+                name="states" 
+              />
+              <TiDelete 
+                style={{ cursor: 'pointer', marginLeft: 'auto' }} 
+                onClick={ handleResetStateSelect } 
+                size={40} 
+                color="#cecece" 
+              />
+            </span>
+
+            <span style={{ width: '17.4%', borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+              <label>Raio:</label>
+              <Select 
+                options={radius} 
+                name="radius" 
+                value={radiusValue}
+                handleChange={ setRadiusValue }
+              />
+            </span>
+
+            <span style={{ width: '20%', marginLeft: 20 }}>
+              <label>Marca:</label>
+              <Select 
+                handleChange={ handleSetBrand } 
+                options={brands} 
+                name="brands" 
+                value={ brand }
+              />
+            </span>
+
+            <span style={{ width: '20%', marginLeft: 20 }}>
+              <label>Modelo:</label>
+              <Select 
+                handleChange={ handleSetModel } 
+                options={ models } 
+                name="makes" 
+                value={ model }
+              />
+            </span>
+          </Line>
+
+          <Line>
+            <span style={{ width: '25.5%' }}>
+              <Select 
+                placeholder={'Ano desejado'} 
+                handleChange={ setYear } 
+                value={ year } 
+                options={ years } 
+                name="years" 
+              />
+            </span>
+
+            <span style={{ width: '27.5%', marginLeft: 20 }}>
+              <Select 
+                placeholder={'Faixa de preço'} 
+                handleChange={ setPriceRange } 
+                value={ priceRange } 
+                options={ priceRanges } 
+                name="priceRanges"
+              />
+            </span>
+            
+            <span style={{ width: '42.3%', marginLeft: 20 }}>
+              <label>Versões:</label>
+              <Select 
+                handleChange={ setVersion } 
+                value={ version } 
+                options={ versions  } 
+                name="versions" 
+              />
+            </span>
+          </Line>
+
+          <Line>
+            <AdvancedSearch>
+              <IoIosArrowForward size={20} color="#8f3b45"/>
+              Buscar Avançada
+            </AdvancedSearch>
+            <CleanButton onClick={ handleCleanForm }>Limpar filtros</CleanButton>
+            <button type="submit">VER OFERTAS</button>
+          </Line>
+        </Form>
+      </Content>
     </Container>
-   
   );
 }

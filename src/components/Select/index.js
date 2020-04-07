@@ -5,6 +5,7 @@ import { SelectInput } from './styles';
 
 export default function Select({ 
   name, 
+  value,
   options, 
   handleChange, 
   placeholder = "Todas", 
@@ -12,7 +13,7 @@ export default function Select({
   style,
   ...rest }) {
   const inputRef = useRef(null);
-  const { fieldName, defaultValue = '', registerField } = useField(name);
+  const { fieldName, registerField } = useField(name);
   
   useEffect(() => {
     registerField({
@@ -26,17 +27,16 @@ export default function Select({
     <SelectInput 
       style={ style }
       ref={inputRef} 
-      defaultValue={defaultValue} 
       {...rest}
-      onChange={ e => handleChange != null ? handleChange(e.target.value) : '' }
+      onChange={ e => handleChange(e.target.value) }
       disabled={options.length < 1}
     >
-      <option value="">{ placeholderTitle }: { placeholder }</option>
+      <option value="">{ placeholder }</option>
       {options.map(option => (
         <option 
           value={option.ID} 
           key={option.ID}>
-          { placeholderTitle }: {option.Name || option.Make} 
+          {option.Name || option.Make} 
         </option>
       ))}
     </SelectInput>
