@@ -5,9 +5,11 @@ import { toast } from 'react-toastify';
 
 import Select from '../../components/Select';
 
-import { api, local } from '../../services/api';
+import { api } from '../../services/api';
 
 import { Container, Line, Options, CleanButton, AdvancedSearch, Content } from './styles';
+
+import mocks from '../../mock';
 
 import Checkbox from '../../components/Checkbox';
 import Header from './Header';
@@ -69,15 +71,15 @@ export default function Dashboard() {
   }
 
   async function loadStatesAndRadius() {
-    const states = await local.get('states');
-    const radius = await local.get('radius');
-    const years = await local.get('years');
-    const ranges = await local.get('ranges');
+    const states = mocks.states;
+    const radius = mocks.radius;
+    const years = mocks.years;
+    const ranges = mocks.ranges;
 
-    setRadius(radius.data);
-    setStates(states.data);
-    setYears(years.data);
-    setPriceRanges(ranges.data);
+    setRadius(radius);
+    setStates(states);
+    setYears(years);
+    setPriceRanges(ranges);
   }
 
   async function handleSetModel(id) {

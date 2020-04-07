@@ -19,7 +19,7 @@
     "styled-components": "^5.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start && yarn json-server --watch server.json -p 4040",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
