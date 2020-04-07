@@ -13,6 +13,10 @@ export const Container = styled.div`
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+
+    @media screen and (max-width: 415px) {
+      font-size: 14px;
+    }
   }
 
   label input {
@@ -31,6 +35,11 @@ export const Container = styled.div`
     width: 25px;
     border: 1px solid #d8d8da;
     background: #FFF;
+
+    @media screen and (max-width: 415px) {
+      height: 15px;
+      width: 15px;
+    }
   }
 
   label input:checked ~ span {
@@ -50,6 +59,7 @@ export const Container = styled.div`
   label span:after {
     left: 9px;
     top: 5px;
+    
     width: 5px;
     height: 10px;
     border: solid red;
@@ -57,5 +67,11 @@ export const Container = styled.div`
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
+
+    @media screen and (max-width: 415px) {
+      top: -1px;
+      left: 3px;
+    }
+   
   }
 `;

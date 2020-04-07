@@ -8,9 +8,14 @@ export const Container = styled.div`
    align-items: center;
    margin: 80px auto;
    max-width: 1020px;
-  `;
+`;
 
 export const Content = styled.div`
+  @media screen and (max-width: 415px) {
+    width: 100%;
+    max-height: 100%;
+  }
+
   max-height: 312px;
   
   height: 100%;
@@ -27,6 +32,10 @@ export const Content = styled.div`
     max-width: 933px;
     margin: auto;
 
+    @media screen and (max-width: 415px) {
+      width: 100%;
+    }
+
     button {
       align-self: flex-end;
       width: 30%;
@@ -39,6 +48,10 @@ export const Content = styled.div`
       font-size: 17px;
       transition: background 0.3s;
 
+      @media screen and (max-width: 415px) {
+        width: 100%;
+      }
+
       :hover {
         padding: 11px 30px;
         font-size: 19px;
@@ -46,6 +59,10 @@ export const Content = styled.div`
       }
 
       :active {
+        @media screen and (max-width: 415px) {
+          padding: 11px;
+        }
+
         padding: 10px;
       }
     }
@@ -57,7 +74,16 @@ export const Line = styled.div`
   justify-content: space-between;
   align-items: center;
 
+  @media screen and (max-width: 415px) {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
   padding: 0 20px 20px 20px;
+
+  @media screen and (max-width: 415px) {
+    padding: 0 20px 0 20px;
+  }
   
   span {
     display: flex;
@@ -69,18 +95,28 @@ export const Line = styled.div`
     border: 1px solid #b0b2b1;
     padding: 0 10px;
 
+    @media screen and (max-width: 415px) {
+      width: 100% !important;
+      margin-bottom: 20px;
+      margin-left: 0 !important;
+    }
+
     label {
       font-size: 14px;
       color: #b0b2b1;
+
+      @media screen and (max-width: 415px) {
+        font-size: 12px;
+      }
     }
   }
 `;
 
-export const Options = styled.div`
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-`;
+  export const Options = styled.div`
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+  `;
 
 export const CleanButton = styled.span`
   margin-left: auto;
@@ -92,6 +128,11 @@ export const CleanButton = styled.span`
   
   cursor: pointer;
   transition: color 0.4s;
+
+  @media screen and (max-width: 415px) {
+    font-size: 15px;
+    margin-top: 0 !important;
+  }
 
   :hover {
     color: ${darken(0.3, '#93989b')};
@@ -106,6 +147,10 @@ export const AdvancedSearch = styled.span`
   cursor: pointer;
   transition: color 0.4s;
   padding: 0 !important;
+
+  @media screen and (max-width: 415px) {
+    font-size: 14px;
+  }
 
   :hover {
     color: ${darken(0.1, '#8f3b45')};

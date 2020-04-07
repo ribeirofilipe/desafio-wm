@@ -12,4 +12,8 @@ export const SelectInput = styled.select`
   color: #6a6365;
   font-weight: bold;
 
+  @media screen and (max-width: 415px) {
+      font-size: 10px;
+  }
+
 `;
